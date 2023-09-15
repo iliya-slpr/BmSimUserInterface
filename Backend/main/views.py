@@ -125,7 +125,7 @@ class PreviewViewSet(viewsets.ModelViewSet):
         fout.close()
         fin.close()
         
-        initout = subprocess.run(["py",filename+".py"],stdout=subprocess.PIPE,cwd="./main/preview/")
+        initout = subprocess.run(["python",filename+".py"],stdout=subprocess.PIPE,cwd="./main/preview/")
         
         with open("./main/preview/topology.png", "rb") as f:
             file= f.read()
@@ -155,15 +155,14 @@ def run_sim(id):
     print("here")
     #os.system("cd ./main/simulations/"+str(id)+" && py event_driven.py")
     #os.system("cd ./main/simulations/"+str(id) +" && py performance_analyzer.py")
-    main_out = subprocess.run(["py","event_driven.py"],stdout=subprocess.PIPE,cwd="./main/simulations/"+str(id))
+    main_out = subprocess.run(["python","event_driven.py"],stdout=subprocess.PIPE,cwd="./main/simulations/"+str(id))
 
-    performance_out = subprocess.run(["py", "performance_analyzer.py"],stdout=subprocess.PIPE,cwd="./main/simulations/"+str(id))
+    performance_out = subprocess.run(["python", "performance_analyzer.py"],stdout=subprocess.PIPE,cwd="./main/simulations/"+str(id))
     print(main_out.stdout.decode("utf-8"))
-    os.system("dir")
     
     os.system("cd ./main/simulations/"+str(id)+" &&  tar -a -c -f "+str(id)+".zip *.log *.png *.pdf")
-    os.system("move  .\main\simulations\\"+str(id)+"\*.zip .\static")
-    os.system("move .\main\simulations\\"+str(id)+"\\topology.png .\static\\"+str(id)+".png")
+    os.system("mv  ./main/simulations/"+str(id)+"/*.zip ./static")
+    os.system("mv ./main/simulations/"+str(id)+"/topology.png ./static/"+str(id)+".png")
 
     #os.system("cp *.zip *.png ../")
     Simulation.objects.filter(id=id).update(done=1,run_log=performance_out.stdout.decode("utf-8"))

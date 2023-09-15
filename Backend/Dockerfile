@@ -6,7 +6,8 @@ RUN apk add g++ jpeg-dev zlib-dev libjpeg make
 
 
 RUN pip install --no-cache-dir -r requirements.txt
-COPY . /bmsim
+RUN apk add tk
+COPY . ./bmsim
 WORKDIR ./bmsim
 
 RUN python manage.py makemigrations
