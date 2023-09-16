@@ -10,8 +10,7 @@ import { baseUrl } from '../../Helpers/Constants';
   const Menu = () => {
     const [listDataSource, setListDataSource] = useState([]);
     let data = [];
-    useEffect(()=>{
-
+    let getData = ()=>{
       axios.get('/').then(res => {
         data = [...res.data];
         const serializedData = data.map(item => ({ 
@@ -25,6 +24,10 @@ import { baseUrl } from '../../Helpers/Constants';
         setListDataSource(serializedData);
 
       })
+    }
+    useEffect(()=>{
+      getData();
+      
     } , [])
     return (<div style={{display:'flex' , flexDirection:'column' , margin:'0.5em 0'}}>
     <div style={{alignSelf:'flex-end'}}>
@@ -40,8 +43,7 @@ import { baseUrl } from '../../Helpers/Constants';
         renderItem={(item) => (
           <List.Item
             key={item.title}
-            
-           
+
           >
             <List.Item.Meta
               avatar={<Avatar icon={<BuildOutlined />} />}
@@ -66,7 +68,7 @@ import { baseUrl } from '../../Helpers/Constants';
 
                  </a>
               </div>
-              </> : <Loading />}
+              </> : <Loading getData={getData}/>}
                 </div>
                 
           </List.Item>

@@ -1,21 +1,12 @@
-FROM python:3.11.5-alpine3.18
+FROM node:16.3.0-alpine
+
 WORKDIR /app
-COPY ./requirements.txt .
+COPY package.json /app/package.json
+COPY package-lock.json /app/package-lock.json
 
-RUN apk add g++ jpeg-dev zlib-dev libjpeg make
+RUN npm install
+COPY . /app
 
-
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . /bmsim
-WORKDIR ./bmsim
-
-RUN python manage.py makemigrations
-RUN python manage.py migrate
-EXPOSE 80
-
-CMD ["python","manage.py" ,"runserver", "0.0.0.0:80"]
-
-
-
-
-
+ENV PORT=3000
+EXPOSE 3000
+CMD [ "npm", "start" ]

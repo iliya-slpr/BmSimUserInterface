@@ -25,7 +25,7 @@ const Simulation = () => {
       
       setLoadingPage(true)
 
-      let resp = await axios.post('http://localhost:8000/preview/',values);
+      let resp = await axios.post(`${baseUrl}/preview/`,values);
       setPreview("data:image/png;base64,"+resp.data['preview-image'])
       setNodes(resp.data['nodes'])
       setLoadingPage(false)
@@ -39,7 +39,6 @@ const Simulation = () => {
             axios.get(`/${params.id}/`).then(res=>{
               res.data.total_log = res.data.total_log == 1? true:false
               res.data.random_nodes = res.data.random_nodes == 1? true:false
-              console.log("ttttttttttttt",res.data);
               setInitialValues(res.data)
             });
             setLoadingPage(false);
@@ -53,17 +52,16 @@ const Simulation = () => {
           values.random_nodes = +values.random_nodes;
           values.total_log = values.total_log ? 1 :0;
           values.nodes = nodes;
-      debugger;
 
-            await axios.post('/',values);
-            setLoading(false);
-            navigate('/');
-            notification.success({message:"Successfuly Added, please wait until simulation complete" , duration:5})
+          await axios.post('/',values);
+          setLoading(false);
+          navigate('/');
+          notification.success({message:"Successfuly Added, please wait until simulation complete" , duration:5})
 
         }
         catch(e){
             setLoading(false);
-            notification.error({message:"Successfuly Added, please wait until simulation complete" , duration:5});
+            notification.error({message:"Error!" , duration:5});
         }
 
     }
@@ -154,10 +152,10 @@ const Simulation = () => {
               </Col>
               
               <Col span={8}>
-              <Form.Item label="Node Deployment" name='random_nodes' rules={[{ required: true , message:'Required'}]} initialValue={"0"}>
+              <Form.Item label="Node Deployment" name='random_nodes' rules={[{ required: true , message:'Required'}]} initialValue={false}>
                 <Radio.Group size='small'>
-                  <Radio.Button value="0">Grid</Radio.Button>
-                  <Radio.Button value="1">Random</Radio.Button>
+                  <Radio.Button value={false}>Grid</Radio.Button>
+                  <Radio.Button value={true}>Random</Radio.Button>
                 </Radio.Group>
               </Form.Item>
               </Col>
@@ -191,7 +189,7 @@ const Simulation = () => {
               </Form.Item>
               </Col>
               <Col span={8}>
-              <Form.Item label="Receive Window" name='receive_window'  rules={[{ required: true , message:'Required'}]} initialValue={98}>
+              <Form.Item label="Receive Window(ms)" name='receive_window'  rules={[{ required: true , message:'Required'}]} initialValue={98}>
                 <InputNumber placeholder="0" />
               </Form.Item>
               </Col>
@@ -211,7 +209,7 @@ const Simulation = () => {
               </Col>
               <Col span={8}>
 
-              <Form.Item label="Scan Window" name='scan_window'  rules={[{ required: true , message:'Required'}]} initialValue={30}>
+              <Form.Item label="Scan Window(ms)" name='scan_window'  rules={[{ required: true , message:'Required'}]} initialValue={30}>
                 <InputNumber placeholder="0" />
               </Form.Item>
               </Col>
